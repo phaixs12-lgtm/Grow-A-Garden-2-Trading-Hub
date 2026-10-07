@@ -1,298 +1,667 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Grow a Garden 2 Trading Hub</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/png" href="https://images.rbxcdn.com/712392754eeaa8d36378e11a3d922ed3.png">
-    <style>
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #030303;
-            overflow: hidden;
-            touch-action: none;
-        }
-        .glass-card {
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.9);
-        }
-        .bg-glow {
-            position: absolute;
-            width: 60vw;
-            height: 60vw;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.02) 0%, rgba(0, 0, 0, 0) 70%);
-            filter: blur(100px);
-            pointer-events: none;
-            z-index: 1;
-        }
-        .pulse-line {
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            background-size: 200% 100%;
-            animation: pulseGlow 1.5s infinite linear;
-        }
-        @keyframes pulseGlow {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
-        .fade-in {
-            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.96); filter: blur(8px); }
-            to { opacity: 1; transform: scale(1); filter: blur(0); }
-        }
-        .no-scroll::-webkit-scrollbar { display: none !important; }
-        .no-scroll { -ms-overflow-style: none; scrollbar-width: none; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>License Manager</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #0d1117;
+  color: #e6edf3;
+  min-height: 100vh;
+  padding: 32px 20px;
+  line-height: 1.5;
+}
+
+.container {
+  max-width: 880px;
+  margin: 0 auto;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.header h1 {
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  background: linear-gradient(135deg, #58a6ff, #a371f7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 6px;
+}
+
+.header p {
+  font-size: 13px;
+  color: #7d8590;
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 600;
+  background: rgba(35, 134, 54, 0.15);
+  color: #3fb950;
+  border: 1px solid rgba(35, 134, 54, 0.3);
+  margin-top: 12px;
+}
+
+.status-pill.offline {
+  background: rgba(248, 81, 73, 0.15);
+  color: #f85149;
+  border-color: rgba(248, 81, 73, 0.3);
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.card {
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 12px;
+  padding: 22px;
+  margin-bottom: 16px;
+}
+
+.card-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.card-subtitle {
+  font-size: 12px;
+  color: #7d8590;
+  margin-bottom: 16px;
+}
+
+.input-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+input[type="text"], input[type="number"] {
+  flex: 1;
+  min-width: 200px;
+  padding: 10px 14px;
+  background: #0d1117;
+  border: 1px solid #30363d;
+  border-radius: 8px;
+  color: #e6edf3;
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+  transition: all 0.2s;
+}
+
+input:focus {
+  border-color: #58a6ff;
+  box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.15);
+}
+
+input::placeholder { color: #484f58; }
+
+button {
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.btn-primary { background: #238636; color: white; }
+.btn-primary:hover { background: #2ea043; }
+.btn-primary:active { transform: scale(0.98); }
+
+.btn-secondary {
+  background: #21262d;
+  color: #e6edf3;
+  border: 1px solid #30363d;
+}
+.btn-secondary:hover { background: #30363d; }
+
+.btn-danger { background: #da3633; color: white; }
+.btn-danger:hover { background: #f85149; }
+
+.btn-small {
+  padding: 6px 12px;
+  font-size: 12px;
+  border-radius: 6px;
+}
+
+.result-box {
+  margin-top: 14px;
+  padding: 16px;
+  border-radius: 10px;
+  border: 1px solid #30363d;
+  background: #0d1117;
+  display: none;
+}
+
+.result-box.show {
+  display: block;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.result-box.connected {
+  border-color: rgba(35, 134, 54, 0.4);
+  background: rgba(35, 134, 54, 0.05);
+}
+
+.result-box.not-connected {
+  border-color: rgba(248, 81, 73, 0.4);
+  background: rgba(248, 81, 73, 0.05);
+}
+
+.result-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.result-icon {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.connected .result-icon { background: rgba(35, 134, 54, 0.2); color: #3fb950; }
+.not-connected .result-icon { background: rgba(248, 81, 73, 0.2); color: #f85149; }
+
+.info-grid {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.info-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-size: 13px;
+}
+
+.info-label {
+  color: #7d8590;
+  font-weight: 500;
+  min-width: 90px;
+  font-size: 12px;
+}
+
+.info-value {
+  color: #e6edf3;
+  font-weight: 500;
+  word-break: break-all;
+}
+
+.info-value a {
+  color: #58a6ff;
+  text-decoration: none;
+  font-family: monospace;
+  font-size: 12px;
+}
+
+.info-value a:hover { text-decoration: underline; }
+
+.controls {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding-top: 14px;
+  border-top: 1px solid #30363d;
+  align-items: center;
+}
+
+.controls input {
+  flex: 0 0 100px;
+  min-width: 100px;
+  padding: 6px 10px;
+  font-size: 12px;
+}
+
+.badge {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.badge.active { background: rgba(35, 134, 54, 0.2); color: #3fb950; }
+.badge.locked { background: rgba(248, 81, 73, 0.2); color: #f85149; }
+.badge.expired { background: rgba(219, 109, 40, 0.2); color: #db6d28; }
+.badge.paused { background: rgba(210, 153, 34, 0.2); color: #d29922; }
+.badge.not-connected { background: rgba(72, 79, 88, 0.2); color: #7d8590; }
+
+.empty {
+  text-align: center;
+  padding: 36px 20px;
+  color: #484f58;
+  font-size: 13px;
+}
+
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 10px;
+  padding: 12px 20px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #e6edf3;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.toast.success { border-color: rgba(35, 134, 54, 0.5); }
+.toast.error { border-color: rgba(248, 81, 73, 0.5); }
+
+.toast-icon {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.toast.success .toast-icon { background: rgba(35, 134, 54, 0.25); color: #3fb950; }
+.toast.error .toast-icon { background: rgba(248, 81, 73, 0.25); color: #f85149; }
+
+@media (max-width: 600px) {
+  body { padding: 20px 12px; }
+  .card { padding: 16px; }
+  .header h1 { font-size: 22px; }
+  .input-row { flex-direction: column; }
+  input[type="text"], input[type="number"] { min-width: 100%; }
+  .info-label { min-width: 70px; font-size: 11px; }
+}
+</style>
 </head>
-<body class="relative h-screen w-screen flex items-center justify-center p-4 overflow-hidden select-none box-border">
+<body>
 
-    <div class="bg-glow top-[-20%] left-[-20%]"></div>
-    <div class="bg-glow bottom-[-20%] right-[-20%]"></div>
+<div class="container">
 
-    <main id="landing-card" class="glass-card relative z-10 w-full max-w-[420px] aspect-[4/5] max-h-[540px] rounded-[28px] p-6 sm:p-8 flex flex-col justify-between items-center text-center">
-        <div class="w-full flex flex-col items-center justify-center flex-grow mt-4">
-            <div class="relative flex items-center justify-center w-16 h-16 rounded-2xl bg-white/[0.03] border border-white/10 mb-6 shadow-inner transform transition-transform duration-500 hover:rotate-12">
-                <svg class="w-8 h-8 text-white/90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.25" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
-                </svg>
-                <span class="absolute top-2 right-2 flex h-2 w-2">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white/30 opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-2 w-2 bg-white/70"></span>
-                </span>
-            </div>
+  <div class="header">
+    <h1>License Manager</h1>
+    <p>Verify and control your Roblox place connections</p>
+    <div class="status-pill" id="status">
+      <div class="status-dot"></div>
+      <span id="status-text">Connecting...</span>
+    </div>
+  </div>
 
-            <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mb-2">
-                Grow a Garden 2
-                <span class="block text-base sm:text-lg font-light text-white/40 mt-1 tracking-wider uppercase">Trading Hub</span>
-            </h1>
+  <div class="card">
+    <div class="card-title">🔍 Check Place Connection</div>
+    <div class="card-subtitle">Paste a Roblox place URL or ID. The script sends this automatically when the game runs.</div>
 
-            <p class="text-xs sm:text-sm text-white/30 font-light max-w-[280px] leading-relaxed">
-                The safest place to trade, chat and discover official gaming events.
-            </p>
-        </div>
+    <div class="input-row">
+      <input type="text" id="place-url" placeholder="https://www.roblox.com/games/1234567890/  or  1234567890">
+      <button class="btn-primary" onclick="checkPlace()">Check</button>
+    </div>
 
-        <div class="w-full space-y-5 mb-2">
-            <button onclick="checkRobloxAuth()" class="group relative w-full inline-flex items-center justify-center gap-3 bg-white text-black font-bold text-xs sm:text-sm h-[52px] sm:h-[56px] rounded-2xl transition-all duration-300 hover:bg-neutral-200 active:scale-[0.98] overflow-hidden shadow-xl shadow-white/5">
-                <div class="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/30 to-transparent -skews-x-12 translate-x-[-150%] group-hover:animate-[shine_1s_ease-in-out]"></div>
-                <svg class="w-5 h-5 text-black transform transition-transform group-hover:scale-110" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M18.5 18.5H5.5V5.5h13.2v13.2zM24 0H0v24h24V0z" fill="none"/>
-                    <path d="M4.2 9.4l11.8-3.2 3.2 11.8-11.8 3.2z"/>
-                </svg>
-                <span>Continue with Roblox</span>
-            </button>
+    <div class="result-box" id="result"></div>
+  </div>
 
-            <div class="flex items-center justify-center gap-2 text-[10px] tracking-wide text-white/20 uppercase font-medium">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
-                </svg>
-                <span>Secure Official Connection</span>
-            </div>
-        </div>
-    </main>
+  <div class="card">
+    <div class="card-title">📋 All Connected Places</div>
+    <div class="card-subtitle">Every place that has sent data to the server. Updates every 10 seconds.</div>
+    <div id="places-list">
+      <div class="empty">Loading...</div>
+    </div>
+  </div>
 
-    <main id="no-account-card" class="glass-card hidden relative z-10 w-full max-w-[420px] aspect-[4/5] max-h-[500px] rounded-[28px] p-6 sm:p-8 flex flex-col justify-between items-center text-center">
-        <div class="w-full flex flex-col items-center justify-center flex-grow mt-4">
-            <div class="w-14 h-14 rounded-2xl bg-red-500/5 border border-red-500/15 flex items-center justify-center text-red-400 mb-5 shadow-inner">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
-                </svg>
-            </div>
-            <h2 class="text-xl font-bold text-white mb-2">No Session Detected</h2>
-            <p class="text-xs sm:text-sm text-white/30 max-w-[280px] leading-relaxed">We couldn't detect an active Roblox account in this browser session. Please log in to your official account first.</p>
-        </div>
-        <button onclick="redirectToRoblox()" class="w-full bg-white text-black font-bold text-xs sm:text-sm h-[52px] rounded-xl transition-all duration-200 hover:bg-neutral-200 active:scale-[0.98]">
-            Go to Roblox Login
-        </button>
-    </main>
+</div>
 
-    <main id="confirm-card" class="glass-card hidden relative z-10 w-full max-w-[420px] aspect-[4/5] max-h-[540px] rounded-[28px] p-6 sm:p-8 flex flex-col justify-between items-center text-center">
-        
-        <div class="w-full flex items-center justify-center gap-6 my-2 px-4 relative">
-            <div class="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/60 shadow-md">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
-                </svg>
-            </div>
-            <div class="flex-grow h-[2px] relative overflow-hidden bg-white/10 rounded-full">
-                <div class="absolute inset-0 pulse-line"></div>
-            </div>
-            <div class="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/80 shadow-md">
-                <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M4.2 9.4l11.8-3.2 3.2 11.8-11.8 3.2z"/>
-                </svg>
-            </div>
-        </div>
+<div class="toast" id="toast">
+  <div class="toast-icon" id="toast-icon">✓</div>
+  <span id="toast-text">Message</span>
+</div>
 
-        <h2 class="text-lg sm:text-xl font-bold text-white/90 tracking-tight mt-1">Is this your account?</h2>
+<script>
+const API_URL = "http://localhost:3001";
+const SECRET = "your-secret-password-here";
 
-        <div class="w-full flex flex-col items-center justify-center flex-grow my-4 bg-gradient-to-b from-white/[0.02] to-transparent border border-white/[0.06] rounded-2xl p-5 shadow-inner">
-            <div class="relative w-20 h-20 rounded-full overflow-hidden bg-neutral-900 border-2 border-white/10 mb-3.5 shadow-2xl">
-                <img id="user-avatar" src="https://images.rbxcdn.com/712392754eeaa8d36378e11a3d922ed3.png" alt="Avatar" class="w-full h-full object-cover">
-            </div>
-            <div id="display-name" class="text-lg font-bold text-white tracking-wide">Loading...</div>
-            <div id="username" class="text-xs text-white/40 font-medium"></div>
-            <div id="user-id" class="text-[9px] text-white/30 font-mono mt-2 bg-white/5 px-2.5 py-1 rounded-full border border-white/5 inline-block"></div>
-        </div>
+let toastTimer = null;
 
-        <div class="w-full space-y-2.5">
-            <button onclick="handleUserRouting()" class="w-full bg-white text-black font-bold text-xs sm:text-sm h-[48px] sm:h-[52px] rounded-xl transition-all duration-200 hover:bg-neutral-200 active:scale-[0.98] shadow-lg">
-                Yes, Link Account
-            </button>
-            <button onclick="changeAccount()" class="w-full bg-white/5 border border-white/10 text-white font-semibold text-xs sm:text-sm h-[48px] sm:h-[52px] rounded-xl transition-all duration-200 hover:bg-white/10 active:scale-[0.98]">
-                Not Me, Switch
-            </button>
-        </div>
-    </main>
+function showToast(message, type) {
+  const toast = document.getElementById("toast");
+  const icon = document.getElementById("toast-icon");
+  const text = document.getElementById("toast-text");
 
-    <main id="rules-card" class="glass-card hidden relative z-10 w-full max-w-[440px] aspect-[4/5] max-h-[540px] rounded-[28px] p-5 sm:p-6 flex flex-col justify-between">
-        <div class="text-center">
-            <h2 class="text-base sm:text-lg font-bold text-white tracking-wide">Trading Rules & Safety</h2>
-            <p class="text-[10px] sm:text-xs text-white/40 mt-0.5">Follow our guidelines carefully to avoid exploitation.</p>
-        </div>
+  text.textContent = message;
+  icon.textContent = type === "success" ? "✓" : "✕";
+  toast.className = "toast show " + (type || "success");
 
-        <div class="flex-grow flex flex-col justify-center space-y-2 my-2 overflow-hidden no-scroll">
-            <div class="flex items-center gap-3 p-3 rounded-xl bg-white/[0.01] border border-white/5 h-[16%] min-h-[50px]">
-                <div class="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-lg bg-white/10 text-white text-[10px] font-mono font-bold">1</div>
-                <div class="min-w-0">
-                    <h4 class="text-xs font-semibold text-white truncate">Use Safe Trading System Only</h4>
-                    <p class="text-[10px] text-white/40 truncate">Cross-trading outside the platform is completely banned.</p>
-                </div>
-            </div>
-            <div class="flex items-center gap-3 p-3 rounded-xl bg-white/[0.01] border border-white/5 h-[16%] min-h-[50px]">
-                <div class="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-lg bg-white/10 text-white text-[10px] font-mono font-bold">2</div>
-                <div class="min-w-0">
-                    <h4 class="text-xs font-semibold text-white truncate">No External Links</h4>
-                    <p class="text-[10px] text-white/40 truncate">Sharing suspicious off-site links leads to immediate ban.</p>
-                </div>
-            </div>
-            <div class="flex items-center gap-3 p-3 rounded-xl bg-white/[0.01] border border-white/5 h-[16%] min-h-[50px]">
-                <div class="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-lg bg-white/10 text-white text-[10px] font-mono font-bold">3</div>
-                <div class="min-w-0">
-                    <h4 class="text-xs font-semibold text-white truncate">Double Check Item Values</h4>
-                    <p class="text-[10px] text-white/40 truncate">Confirm quantities on screen before checking ready.</p>
-                </div>
-            </div>
-            <div class="flex items-center gap-3 p-3 rounded-xl bg-white/[0.01] border border-white/5 h-[16%] min-h-[50px]">
-                <div class="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-lg bg-white/10 text-white text-[10px] font-mono font-bold">4</div>
-                <div class="min-w-0">
-                    <h4 class="text-xs font-semibold text-white truncate">Rating Integrity</h4>
-                    <p class="text-[10px] text-white/40 truncate">Manipulating reviews locks your trader privileges.</p>
-                </div>
-            </div>
-            <div class="flex items-center gap-3 p-3 rounded-xl bg-white/[0.01] border border-white/5 h-[16%] min-h-[50px]">
-                <div class="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-lg bg-white/10 text-white text-[10px] font-mono font-bold">5</div>
-                <div class="min-w-0">
-                    <h4 class="text-xs font-semibold text-white truncate">Instant Exploit Reporting</h4>
-                    <p class="text-[10px] text-white/40 truncate">Report any player requesting secure cookies immediately.</p>
-                </div>
-            </div>
-        </div>
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    toast.className = "toast " + (type || "success");
+  }, 3000);
+}
 
-        <div class="w-full space-y-3">
-            <label class="flex items-center justify-center gap-2.5 cursor-pointer group select-none">
-                <input type="checkbox" id="rules-checkbox" onchange="toggleEnterButton()" class="w-3.5 h-3.5 rounded border-white/10 bg-white/5 checked:bg-white text-black focus:ring-0 transition-all">
-                <span class="text-[10px] text-white/50 group-hover:text-white transition-colors text-center">I agree to follow all 5 trading hub rules.</span>
-            </label>
+function setOnline(online) {
+  const el = document.getElementById("status");
+  const text = document.getElementById("status-text");
 
-            <button id="enter-btn" disabled onclick="enterDashboard()" class="w-full bg-white/10 text-white/30 font-bold text-xs sm:text-sm h-[46px] sm:h-[50px] rounded-xl transition-all duration-300 cursor-not-allowed">
-                I Accept & Enter Dashboard
-            </button>
-        </div>
-    </main>
+  if (online) {
+    el.classList.remove("offline");
+    text.textContent = "Connected to server";
+  } else {
+    el.classList.add("offline");
+    text.textContent = "Server offline";
+  }
+}
 
-    <script>
-        const landingCard = document.getElementById('landing-card');
-        const noAccountCard = document.getElementById('no-account-card');
-        const confirmCard = document.getElementById('confirm-card');
-        const rulesCard = document.getElementById('rules-card');
-        const rulesCheckbox = document.getElementById('rules-checkbox');
-        const enterBtn = document.getElementById('enter-btn');
+function escapeHtml(str) {
+  return String(str == null ? "" : str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
 
-        // INTELLIGENT SYSTEM CONFIGURATION
-        let sessionState = {
-            hasActiveRobloxLogin: true, // تـحكم بـوجود جلسـة مـن هـنا (True/False)
-            userId: "48920155" // اكتب الـ ID الخاص بك هنا وسيجلب السكن والبيانات تلقائياً!
-        };
+function extractPlaceId(input) {
+  input = String(input).trim();
+  if (/^\d+$/.test(input)) return input;
+  const match = input.match(/games\/(\d+)/);
+  if (match) return match[1];
+  return null;
+}
 
-        async function fetchRobloxUserData(userId) {
-            try {
-                // Fetching real avatar asset data using Roblox public proxy link
-                document.getElementById('user-avatar').src = `https://images.rbxcdn.com/712392754eeaa8d36378e11a3d922ed3.png`;
-                document.getElementById('display-name').innerText = "BuildMaster";
-                document.getElementById('username').innerText = "@BuildMaster_RBX";
-                document.getElementById('user-id').innerText = "ROBLOX ID: " + userId;
-            } catch (err) {
-                console.log("Error loading avatar via asset pipelines.");
-            }
-        }
+function getState(place) {
+  if (place.expiresAt > 0 && Date.now() > place.expiresAt) return "expired";
+  if (place.locked) return "locked";
+  if (place.enabled === false) return "paused";
+  return "active";
+}
 
-        function checkRobloxAuth() {
-            landingCard.classList.add('opacity-0', 'scale-95', 'transition-all', 'duration-300');
-            setTimeout(() => {
-                landingCard.classList.add('hidden');
-                if (!sessionState.hasActiveRobloxLogin) {
-                    noAccountCard.classList.remove('hidden');
-                    noAccountCard.classList.add('fade-in');
-                } else {
-                    fetchRobloxUserData(sessionState.userId);
-                    confirmCard.classList.remove('hidden');
-                    confirmCard.classList.add('fade-in');
-                }
-            }, 300);
-        }
+function formatTime(ms) {
+  if (!ms || ms <= 0) return "";
+  const diff = ms - Date.now();
+  if (diff <= 0) return "Expired";
 
-        function redirectToRoblox() {
-            window.location.href = "https://www.roblox.com/login";
-        }
+  const h = Math.floor(diff / 3600000);
+  const m = Math.floor((diff % 3600000) / 60000);
+  const s = Math.floor((diff % 60000) / 1000);
 
-        function handleUserRouting() {
-            confirmCard.classList.add('opacity-0', 'scale-95', 'transition-all', 'duration-300');
-            setTimeout(() => {
-                confirmCard.classList.add('hidden');
-                rulesCard.className = "glass-card relative z-10 w-full max-w-[440px] aspect-[4/5] max-h-[540px] rounded-[28px] p-5 sm:p-6 flex flex-col justify-between fade-in";
-            }, 300);
-        }
+  return String(h).padStart(2, "0") + ":" +
+         String(m).padStart(2, "0") + ":" +
+         String(s).padStart(2, "0");
+}
 
-        function changeAccount() {
-            confirmCard.classList.add('opacity-0', 'scale-95', 'transition-all', 'duration-300');
-            setTimeout(() => {
-                confirmCard.classList.add('hidden');
-                confirmCard.classList.remove('opacity-0', 'scale-95');
-                landingCard.classList.remove('hidden', 'opacity-0', 'scale-95');
-                landingCard.classList.add('fade-in');
-            }, 300);
-        }
+async function api(path) {
+  const res = await fetch(API_URL + path);
+  return res.json();
+}
 
-        function toggleEnterButton() {
-            if (rulesCheckbox.checked) {
-                enterBtn.removeAttribute('disabled');
-                enterBtn.className = "w-full bg-white text-black font-bold text-xs sm:text-sm h-[46px] sm:h-[50px] rounded-xl transition-all duration-300 hover:bg-neutral-200 active:scale-[0.98] shadow-lg shadow-white/5";
-            } else {
-                enterBtn.setAttribute('disabled', 'true');
-                enterBtn.className = "w-full bg-white/10 text-white/30 font-bold text-xs sm:text-sm h-[46px] sm:h-[50px] rounded-xl transition-all duration-300 cursor-not-allowed";
-            }
-        }
+async function checkPlace() {
+  const input = document.getElementById("place-url").value.trim();
+  const result = document.getElementById("result");
 
-        function enterDashboard() {
-            alert("Success! Synchronizing secure profile tokens... Entering dashboard hub.");
-        }
-    </script>
+  if (!input) {
+    showToast("Enter a place URL or ID", "error");
+    return;
+  }
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    animation: { shine: 'shine 0.8s ease-in-out' },
-                    keyframes: { shine: { '100%': { transform: 'translateX(250%)' } } }
-                }
-            }
-        }
-    </script>
+  const placeId = extractPlaceId(input);
+
+  if (!placeId) {
+    showToast("Invalid place URL or ID", "error");
+    return;
+  }
+
+  try {
+    const data = await api("/api/places/find?placeId=" + encodeURIComponent(placeId) + "&secret=" + SECRET);
+
+    if (data.error) {
+      showToast("Error: " + data.error, "error");
+      return;
+    }
+
+    setOnline(true);
+    renderResult(data);
+  } catch (err) {
+    setOnline(false);
+    showToast("Cannot reach server", "error");
+  }
+}
+
+function renderResult(data) {
+  const box = document.getElementById("result");
+  box.className = "result-box show";
+  box.innerHTML = "";
+
+  if (!data.found) {
+    box.classList.add("not-connected");
+    box.innerHTML =
+      '<div class="result-header">' +
+        '<div class="result-icon">✕</div>' +
+        '<span>Not Connected</span>' +
+      '</div>' +
+      '<div style="font-size:13px;color:#7d8590;">' +
+        'No script has sent data from this place yet. Make sure the script is running and the API URL is correct.' +
+      '</div>';
+    return;
+  }
+
+  const place = data.place;
+  const state = getState(place);
+  const timeLeft = place.expiresAt > 0 ? formatTime(place.expiresAt) : "";
+
+  box.classList.add("connected");
+
+  let html =
+    '<div class="result-header">' +
+      '<div class="result-icon">✓</div>' +
+      '<span>Connected</span>' +
+      '<span class="badge ' + state + '" style="margin-left:auto;">' + state + '</span>' +
+    '</div>' +
+    '<div class="info-grid">' +
+      '<div class="info-row">' +
+        '<div class="info-label">Place Name:</div>' +
+        '<div class="info-value">' + escapeHtml(place.placeName) + '</div>' +
+      '</div>' +
+      '<div class="info-row">' +
+        '<div class="info-label">Creator:</div>' +
+        '<div class="info-value">' + escapeHtml(place.creatorName) + '</div>' +
+      '</div>' +
+      '<div class="info-row">' +
+        '<div class="info-label">Place ID:</div>' +
+        '<div class="info-value">' + escapeHtml(place.placeId) + '</div>' +
+      '</div>' +
+      '<div class="info-row">' +
+        '<div class="info-label">Link:</div>' +
+        '<div class="info-value"><a href="' + escapeHtml(place.placeLink) + '" target="_blank">' + escapeHtml(place.placeLink) + '</a></div>' +
+      '</div>' +
+      '<div class="info-row">' +
+        '<div class="info-label">Client:</div>' +
+        '<div class="info-value">' + escapeHtml(place.clientName || "Unknown") + '</div>' +
+      '</div>';
+
+  if (timeLeft) {
+    html +=
+      '<div class="info-row">' +
+        '<div class="info-label">Time Left:</div>' +
+        '<div class="info-value" style="color:#d29922;font-family:monospace;">⏱ ' + timeLeft + '</div>' +
+      '</div>';
+  }
+
+  html += '</div>';
+
+  html +=
+    '<div class="controls">' +
+      '<button class="btn-secondary btn-small" onclick="placeAction(\'' + escapeHtml(place.key) + '\', \'' + escapeHtml(place.placeId) + '\', \'unlock\')">🔓 Unlock</button>' +
+      '<button class="btn-danger btn-small" onclick="placeAction(\'' + escapeHtml(place.key) + '\', \'' + escapeHtml(place.placeId) + '\', \'lock\')">🔒 Lock</button>' +
+      '<input type="number" id="time-input" placeholder="Seconds" min="1">' +
+      '<button class="btn-primary btn-small" onclick="placeAction(\'' + escapeHtml(place.key) + '\', \'' + escapeHtml(place.placeId) + '\', \'settime\')">⏱ Set Time</button>' +
+    '</div>';
+
+  box.innerHTML = html;
+}
+
+async function placeAction(key, placeId, action) {
+  let path = "/api/chat/" + action + "?key=" + encodeURIComponent(key) +
+             "&placeId=" + encodeURIComponent(placeId) +
+             "&secret=" + SECRET;
+
+  if (action === "settime") {
+    const input = document.getElementById("time-input");
+    const seconds = parseInt(input.value);
+
+    if (!seconds || seconds < 1) {
+      showToast("Enter valid seconds", "error");
+      return;
+    }
+
+    path += "&seconds=" + seconds;
+  }
+
+  try {
+    const data = await api(path);
+
+    if (data.error) {
+      showToast("Error: " + data.error, "error");
+      return;
+    }
+
+    const messages = {
+      lock: "Place locked successfully",
+      unlock: "Place unlocked successfully",
+      settime: "Timer set for " + document.getElementById("time-input").value + "s"
+    };
+
+    showToast(messages[action] || "Done", "success");
+    checkPlace();
+    loadPlaces();
+  } catch (err) {
+    showToast("Server error", "error");
+  }
+}
+
+async function loadPlaces() {
+  const list = document.getElementById("places-list");
+
+  try {
+    const data = await api("/api/places/list?secret=" + SECRET);
+
+    if (data.error) {
+      list.innerHTML = '<div class="empty">Unauthorized — check SECRET</div>';
+      setOnline(false);
+      return;
+    }
+
+    setOnline(true);
+
+    if (!data.places || data.places.length === 0) {
+      list.innerHTML = '<div class="empty">No places connected yet. Waiting for script to run...</div>';
+      return;
+    }
+
+    list.innerHTML = "";
+
+    data.places.forEach(place => {
+      const state = getState(place);
+      const timeLeft = place.expiresAt > 0 ? formatTime(place.expiresAt) : "";
+
+      const item = document.createElement("div");
+      item.style.cssText = "padding:14px;border:1px solid #30363d;border-radius:10px;margin-bottom:8px;background:#0d1117;";
+
+      item.innerHTML =
+        '<div style="display:flex;justify-content:space-between;align-items:start;gap:12px;margin-bottom:8px;">' +
+          '<div style="flex:1;min-width:0;">' +
+            '<div style="font-size:13px;font-weight:600;color:#e6edf3;margin-bottom:4px;">' + escapeHtml(place.placeName) + '</div>' +
+            '<a href="' + escapeHtml(place.placeLink) + '" target="_blank" style="color:#58a6ff;font-size:11px;text-decoration:none;font-family:monospace;word-break:break-all;">' + escapeHtml(place.placeLink) + '</a>' +
+            '<div style="color:#7d8590;font-size:11px;margin-top:4px;">👤 ' + escapeHtml(place.creatorName) + ' · ' + escapeHtml(place.clientName || "Unknown") + '</div>' +
+          '</div>' +
+          '<span class="badge ' + state + '">' + state + '</span>' +
+        '</div>' +
+        (timeLeft ? '<div style="color:#d29922;font-size:11px;font-family:monospace;margin-bottom:8px;">⏱ ' + timeLeft + '</div>' : '') +
+        '<div style="display:flex;gap:6px;flex-wrap:wrap;padding-top:10px;border-top:1px solid #30363d;">' +
+          '<button class="btn-secondary btn-small" onclick="placeAction(\'' + escapeHtml(place.key) + '\', \'' + escapeHtml(place.placeId) + '\', \'unlock\')">🔓 Unlock</button>' +
+          '<button class="btn-danger btn-small" onclick="placeAction(\'' + escapeHtml(place.key) + '\', \'' + escapeHtml(place.placeId) + '\', \'lock\')">🔒 Lock</button>' +
+        '</div>';
+
+      list.appendChild(item);
+    });
+  } catch (err) {
+    list.innerHTML = '<div class="empty">Cannot load places</div>';
+    setOnline(false);
+  }
+}
+
+document.getElementById("place-url").addEventListener("keydown", function(e) {
+  if (e.key === "Enter") checkPlace();
+});
+
+loadPlaces();
+setInterval(loadPlaces, 10000);
+setInterval(() => {
+  document.querySelectorAll(".badge").forEach(b => {
+    if (b.textContent === "expired") return;
+  });
+}, 1000);
+</script>
+
 </body>
 </html>
